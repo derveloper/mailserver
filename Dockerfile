@@ -5,9 +5,18 @@ LABEL description "Simple and full-featured mail server using Docker" \
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get update && apt-get install wget -y -q --no-install-recommends
+
+RUN echo "deb http://xi.dovecot.fi/debian/ stable-auto/dovecot-2.3 main" >> /etc/apt/sources.list
+
+RUN wget http://xi.dovecot.fi/debian/archive.key
+RUN apt-key add archive.key && rm archive.key
+
+RUN apt-get update && apt-get install -y -q --no-install-recommends \
+    dovecot-core=2:2.3.2~alpha0-1~auto+47 dovecot-imapd=2:2.3.2~alpha0-1~auto+47 dovecot-lmtpd=2:2.3.2~alpha0-1~auto+47  dovecot-pgsql=2:2.3.2~alpha0-1~auto+47  dovecot-mysql=2:2.3.2~alpha0-1~auto+47  dovecot-sieve=2:2.3.2~alpha0-1~auto+47  dovecot-managesieved=2:2.3.2~alpha0-1~auto+47  dovecot-pop3d=2:2.3.2~alpha0-1~auto+47
+
 RUN apt-get update && apt-get install -y -q --no-install-recommends \
     postfix postfix-pgsql postfix-mysql postfix-pcre libsasl2-modules \
-    dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pgsql dovecot-mysql dovecot-sieve dovecot-managesieved dovecot-pop3d \
     fetchmail libdbi-perl libdbd-pg-perl libdbd-mysql-perl liblockfile-simple-perl \
     clamav clamav-daemon \
     python-setuptools python-gpgme \
